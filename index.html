@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QitatLauncher | Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-oled">
+    
+    <div class="topography-bg"></div>
+
+    <div id="intro-splash" class="intro-splash">
+        <div class="splash-content">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <h1>QitatLauncher</h1>
+            <div class="splash-loader-bar"><div class="splash-loader-fill"></div></div>
+        </div>
+    </div>
+
+    <header class="web-header">
+        <a href="index.html" class="logo-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="28"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span class="logo-text">QitatLauncher</span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="descargas.html">Descargas</a>
+            <a href="documentacion.html">Documentación</a>
+            <button class="theme-btn" id="theme-btn" title="Alternar Tema"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio-section">
+            <h1 class="hero-title">El entorno definitivo<br>para Minecraft.</h1>
+            <p class="hero-desc">Gestión de modpacks inteligente, visor 3D sincronizado con Mojang y optimización absoluta. Juega Offline o Premium sin complicaciones.</p>
+            <div class="hero-actions">
+                <a href="descargas.html" class="primary-btn">Ir a Descargas</a>
+                <a href="documentacion.html" class="secondary-btn">Ver Documentación</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. LÓGICA DE LA INTRO (Una sola vez por sesión) ---
+        const splash = document.getElementById('intro-splash');
+        if (splash) {
+            // Nota de dev: Si quieres ver la intro siempre mientras editas, pon: if (false && !sessionStorage...)
+            if (!sessionStorage.getItem('introReproducida')) {
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        splash.style.opacity = '0'; 
+                        splash.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            splash.remove();
+                            sessionStorage.setItem('introReproducida', 'true');
+                        }, 600);
+                    }, 2500);
+                });
+            } else {
+                splash.style.display = 'none';
+                splash.remove();
+            }
+        }
+
+        // --- 2. LÓGICA DEL TEMA OSCURO/CLARO ---
+        const themeBtn = document.getElementById('theme-btn');
+        let savedTheme = localStorage.getItem('web-theme');
+        if (savedTheme === 'light') document.body.classList.remove('theme-oled');
+
+        themeBtn.addEventListener('click', () => {
+            if (document.body.classList.contains('theme-oled')) {
+                document.body.classList.remove('theme-oled'); 
+                localStorage.setItem('web-theme', 'light');
+            } else {
+                document.body.classList.add('theme-oled'); 
+                localStorage.setItem('web-theme', 'oled');
+            }
+        });
+
+        // --- 3. SISTEMA DE ANIMACIONES (Scroll y Entrada) ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const heroTitle = document.querySelector('.hero-title');
+            const heroDesc = document.querySelector('.hero-desc');
+            const heroActions = document.querySelector('.hero-actions');
+            
+            if(heroTitle) heroTitle.classList.add('fade-in-up', 'delay-1');
+            if(heroDesc) heroDesc.classList.add('fade-in-up', 'delay-2');
+            if(heroActions) heroActions.classList.add('fade-in-up', 'delay-3');
+
+            const elementsToAnimate = document.querySelectorAll('.glass-card, .step-box, .doc-item');
+            elementsToAnimate.forEach(el => el.classList.add('reveal'));
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+            elementsToAnimate.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

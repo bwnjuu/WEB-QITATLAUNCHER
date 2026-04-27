@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación | QitatLauncher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-oled">
+
+    <header class="web-header">
+        <a href="index.html" class="logo-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="28"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span class="logo-text">QitatLauncher</span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="descargas.html">Descargas</a>
+            <a href="documentacion.html" class="active">Documentación</a>
+            <button class="theme-btn" id="theme-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h1 class="section-title">Manual de Usuario</h1>
+            
+            <div class="doc-grid">
+                <div class="glass-card reveal">
+                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">Sistema y Memoria</h3>
+                    <div class="doc-item">
+                        <h4>Asignación de RAM</h4>
+                        <p>Ve a la pestaña "Ajustes". Por defecto el launcher asigna 4GB. Recomendamos subir el deslizador a 8GB para Modpacks.</p>
+                    </div>
+                    <div class="doc-item">
+                        <h4>Aislamiento de Perfiles</h4>
+                        <p>Cada vez que creas un perfil, se genera una carpeta separada. Esto evita que los mods choquen entre diferentes versiones.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card reveal">
+                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">Apariencia y Cuentas</h3>
+                    <div class="doc-item">
+                        <h4>Sincronización de Capas Oficiales</h4>
+                        <p>Al conectar tu cuenta Premium de Microsoft, el launcher se comunica con la API oficial y descarga tus capas (Vanilla, Migrator, etc.).</p>
+                    </div>
+                    <div class="doc-item">
+                        <h4>Skin Personalizada Offline</h4>
+                        <p>Si juegas sin cuenta Premium, arrastra tu archivo <code>.png</code> en "Apariencia". Esa skin se verá en tus mundos locales.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card reveal">
+                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">Mods y Modpacks</h3>
+                    <div class="doc-item">
+                        <h4>Instalador Inteligente</h4>
+                        <p>Busca cualquier pack de Modrinth desde "Modpacks". El launcher descargará automáticamente todas las dependencias necesarias.</p>
+                    </div>
+                    <div class="doc-item">
+                        <h4>Gestor de Mods Activos</h4>
+                        <p>En "Mis Mods", verás una lista de los mods instalados. Puedes apagarlos usando el interruptor sin borrarlos de la PC.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- LÓGICA DEL TEMA ---
+        const themeBtn = document.getElementById('theme-btn');
+        let savedTheme = localStorage.getItem('web-theme');
+        if (savedTheme === 'light') document.body.classList.remove('theme-oled');
+        themeBtn.addEventListener('click', () => {
+            if (document.body.classList.contains('theme-oled')) {
+                document.body.classList.remove('theme-oled'); localStorage.setItem('web-theme', 'light');
+            } else {
+                document.body.classList.add('theme-oled'); localStorage.setItem('web-theme', 'oled');
+            }
+        });
+
+        // --- SISTEMA DE ANIMACIONES ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const sectionTitles = document.querySelectorAll('.section-title');
+            if(sectionTitles.length > 0) sectionTitles[0].classList.add('fade-in-up', 'delay-1');
+
+            const elementsToAnimate = document.querySelectorAll('.glass-card');
+            elementsToAnimate.forEach(el => el.classList.add('reveal'));
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -30px 0px" });
+
+            elementsToAnimate.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
